@@ -110,6 +110,10 @@ class EventService:
     async def get_many_by_query_location_category(self, db, query, location, category, limit, page):
         event_repo = EventRepository(db)
         events_ids = set()
+        if limit is None:
+            limit = 10
+        if page is None:
+            page = 0
 
         if query is not None:
             events_ids.update(set(await event_repo.get_by_query(query)))

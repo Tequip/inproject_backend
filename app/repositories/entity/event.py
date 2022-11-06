@@ -16,7 +16,7 @@ class EventRepository(BaseRepository):
     async def get_many(self, event_ids: List[int], limit: Optional[int] = 10, page: int = 0):
         query = select([event_table]).where(
             and_(event_table.c.id.in_(event_ids), not_(event_table.c.is_hidden))
-        ).limit(limit).offset(page*limit)
+        ).limit(limit).offset(page*limit).order_by(event_table.c.id)
         records = await self.connection.execute(query)
         return records.fetchall()
 
