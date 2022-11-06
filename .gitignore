@@ -1,0 +1,9 @@
+Crowd.db
+venv
+.env
+.idea/*
+__pycache__/
+*.pyc
+*.pyo
+alembic.ini
+.DS_Store

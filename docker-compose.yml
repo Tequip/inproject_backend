@@ -1,0 +1,79 @@
+version: "3.8"
+services:
+
+  proxy:
+    image: '${DOCKER_IMAGE_PROXY}'
+    volumes:
+      - proxy-data:/var/www/html
+    ports:
+      - "80:80"
+    networks:
+      - net
+    depends_on:
+      - backend
+
+  db:
+    image: timescale/timescaledb:latest-pg14
+    volumes:
+      - db-data:/data/postgres
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    networks:
+      - net
+
+  backend:
+    image: '${DOCKER_IMAGE_BACKEND}'
+    volumes:
+      - 'backend-data:${COMMON_FILE_PATH}'
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    networks:
+      - net
+    depends_on:
+      - db
+      - celery
+      - rabbit
+
+  celery:
+    image: '${DOCKER_IMAGE_CELERY}'
+    environment:
+      - C_FORCE_ROOT=true
+    env_file:
+      - .env
+    networks:
+      - net
+    depends_on:
+      - rabbit
+
+  rabbit:
+    image: rabbitmq:3-management
+    ports:
+     - "15672:15672"
+    networks:
+      - net
+
+  superset:
+    image: apache/superset:latest
+    ports:
+     - "8888:8088"
+    volumes:
+      - superset-data:/var/lib/postgresql/data
+      - superset-home:/app
+    depends_on:
+     - db
+
+
+volumes:
+  proxy-data:
+  db-data:
+  backend-data:
+  superset-home:
+  superset-data:
+
+networks:
+  net:
+    driver: bridge
