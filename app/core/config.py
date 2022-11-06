@@ -6,7 +6,7 @@ load_dotenv()
 
 
 class Settings(BaseSettings):
-    APP_TITLE: str = "Crowd"
+    APP_TITLE: str = "InProject"
     APP_VERSION: str = "v0.0.1"
     API_V1_STR: str = "/api"
 
