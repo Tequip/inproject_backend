@@ -1,9 +1,50 @@
-# InProject Backend
+# Задача Интерактиваня платформа для реализации инновационных идей
+## inProject Backend
 Backend
 
-Инструкция сборки docker
-1. git clone git@github.com:Tequip/CrowdBackend.git
-2. Скачать 2 файла с https://disk.yandex.ru/d/UC0yQk6gqFxY4g и поместить их в корень проекта
-   (../CrowdBackend/.env) (../CrowdBackend/Crowd.db)
-3. Находясь в директории CrowdBackend выполнить `docker build -f Dockerfile.dev -t crowd .`
-4. Запустить контейнер `docker run -d -p 8000:80 --name=crowd_backend --rm crowd` 
+Репозиторий содержит код и данные для решения задачи в рамках конкурса "ЛИДЕРЫ ЦИФРОВОЙ ТРАНСФОРМАЦИИ 2022"
+
+### Инструкция сборки
+1. Создать файл `.env`, заполнить в соответствии с `example.env` 
+2. Создать образ backend
+   ```docker build -f dockerfile -t crowd_backend:latest .```
+3. Создать образ celery
+   ```docker build -f celery.dockerfile -t crowd_celery:latest .```
+4. Создать образ nginx
+   ```docker build -f proxy.dockerfile -t crowd_proxy:latest .```
+5. Запустить docker-compose
+   ```docker-compose up --build -d```
+
+### Cтруктура проекта
+1. ```app``` - папка api веб приложения
+   - ```api```
+     - ```dependencies``` - зависимости маршрутов
+     - ```error``` - http ошибки
+     - ```routes``` - маршруты апи
+   - ```core```
+     - ```celery_app.py``` - настройки celery и фоновые задачи
+     - ```config.py``` - конфигурация приложения
+   - ```db``` - настройки подключения к БД
+   - ```models``` - модели таблиц для БД
+   - ```repositories``` - репозитории с запросами к БД
+   - ```schemas``` - схемы для получения и выдачи информации
+   - ```services``` - объединяет работу со схемами и репозиториями
+<!--  -->
+2. ```ml``` - папка с фоновыми задачами искусственного интеллекта
+<!--  -->
+3. ```alembic``` - папка с миграциями
+
+
+### Фоновые задачи
+В проекте существует 4 фоновые задачи:
+1. ```audit``` - отслеживает все запросы в которых присутствует заголовок "Authorization": "Bearer <token>"
+2. ```relation_project``` - просчитывает схожесть проектов с помощью трансформера
+   - Активируется на следующих api маршрутах
+     - ```POST /api/project```
+3. ```calculate_recommendation_users_and_projects``` - подбирает рекомендуемые проекты для участников и рекомендуемых участников для проектов
+   - Активируется на следующих api маршрутах
+     - ```POST /api/project```
+     - ```PUT /api/user```
+4. ```recomended_category``` - классификация категорий на основе анализа семантики проекта
+   - Активируется на следующих api маршрутах
+     - ```POST /api/project```
