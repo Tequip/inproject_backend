@@ -13,15 +13,15 @@ class EventRepository(BaseRepository):
     def __init__(self, connection):
         super(EventRepository, self).__init__(connection, event_table)
 
-    async def get_many(self, event_ids: List[int], limit: Optional[int] = 10):
+    async def get_many(self, event_ids: List[int], limit: Optional[int] = 10, page: int = 0):
         query = select([event_table]).where(
             and_(event_table.c.id.in_(event_ids), not_(event_table.c.is_hidden))
-        ).limit(limit)
+        ).limit(limit).offset(page*limit)
         records = await self.connection.execute(query)
         return records.fetchall()
 
-    async def all(self, limit: Optional[int] = 10):
-        query = select([event_table]).limit(limit)
+    async def all(self, limit: Optional[int] = 10, page: int = 0):
+        query = select([event_table]).limit(limit).offset(page*limit)
         records = await self.connection.execute(query)
         return records.fetchall()
 

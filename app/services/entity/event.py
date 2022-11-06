@@ -107,7 +107,7 @@ class EventService:
                             title_photo=image
                             )
 
-    async def get_many_by_query_location_category(self, db, query, location, category, limit):
+    async def get_many_by_query_location_category(self, db, query, location, category, limit, page):
         event_repo = EventRepository(db)
         events_ids = set()
 
@@ -119,9 +119,9 @@ class EventService:
             events_ids.update(set(await event_repo.get_by_category(category.lower().split(','))))
 
         if query is None and location is None and category is None:
-            events = await event_repo.all(limit)
+            events = await event_repo.all(limit, page)
         else:
-            events = await event_repo.get_many([event_id for event_id in events_ids], limit)
+            events = await event_repo.get_many([event_id for event_id in events_ids], limit, page)
 
         return await self.create_model_events(db, events)
 

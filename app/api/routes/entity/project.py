@@ -18,7 +18,7 @@ async def get_project(query: Optional[str] = None, location: Optional[str] = Non
                       category: Optional[str] = None, page: Optional[int] = None,
                       limit: Optional[int] = None, db=Depends(get_db), token=Depends(get_current_user)):
     return await project_service.get_many_by_query_location_category(db, token.user_id, query,
-                                                                     location, category, page, limit)
+                                                                     location, category, page, limit, page)
 
 
 @router.get("/projects/popular", response_model=List[ProjectShort])

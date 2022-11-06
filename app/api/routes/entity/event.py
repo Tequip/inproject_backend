@@ -22,11 +22,11 @@ standard_responses = {
 async def get_all_events(query: Optional[str] = None,
                          location: Optional[str] = None,
                          category: Optional[str] = None,
-                         # page: Optional[int] = None,
+                         page: Optional[int] = None,
                          limit: Optional[int] = None,
                          db=Depends(get_db),
                          _=Depends(get_current_user)):
-    return await event_service.get_many_by_query_location_category(db, query, location, category, limit)
+    return await event_service.get_many_by_query_location_category(db, query, location, category, limit, page)
 
 
 @router.get("/event/{id}", response_model=Event, responses={**standard_responses})
