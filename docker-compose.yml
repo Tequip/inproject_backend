@@ -2,7 +2,9 @@ version: "3.8"
 services:
 
   proxy:
-    image: '${DOCKER_IMAGE_PROXY}'
+    build:
+      context: .
+      dockerfile: proxy.dockerfile
     volumes:
       - proxy-data:/var/www/html
     ports:
@@ -24,7 +26,9 @@ services:
       - net
 
   backend:
-    image: '${DOCKER_IMAGE_BACKEND}'
+    build:
+      context: .
+      dockerfile: dockerfile
     volumes:
       - 'backend-data:${COMMON_FILE_PATH}'
     env_file:
@@ -39,7 +43,9 @@ services:
       - rabbit
 
   celery:
-    image: '${DOCKER_IMAGE_CELERY}'
+    build:
+      context: .
+      dockerfile: celery.dockerfile
     environment:
       - C_FORCE_ROOT=true
     env_file:

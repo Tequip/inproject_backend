@@ -5,15 +5,10 @@ Backend
 Репозиторий содержит код и данные для решения задачи в рамках конкурса "ЛИДЕРЫ ЦИФРОВОЙ ТРАНСФОРМАЦИИ 2022"
 
 ### Инструкция сборки
-1. Создать файл `.env`, заполнить в соответствии с `example.env` 
-2. Создать образ backend
-   ```docker build -f dockerfile -t crowd_backend:latest .```
-3. Создать образ celery
-   ```docker build -f celery.dockerfile -t crowd_celery:latest .```
-4. Создать образ nginx
-   ```docker build -f proxy.dockerfile -t crowd_proxy:latest .```
-5. Запустить docker-compose
+1. Запустить docker-compose
    ```docker-compose up --build -d```
+2. Накатить миграции
+   ```docker exec inproject_backend-backend-1 alembic upgrade head```
 
 ### Cтруктура проекта
 1. ```app``` - папка api веб приложения

@@ -12,6 +12,7 @@ class Settings(BaseSettings):
 
     PG_DSN: str = os.getenv("PG_DSN")
     PG_CELERY_DSN: str = os.getenv("PG_CELERY_DSN")
+    PG_ALEMBIC_DSN: str = os.getenv("PG_ALEMBIC_DSN")
 
     ALGORITHM: str = os.getenv("ALGORITHM")
     SECRET_KEY: str = os.getenv("SECRET_KEY")
